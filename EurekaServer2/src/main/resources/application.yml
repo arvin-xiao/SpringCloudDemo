@@ -1,0 +1,16 @@
+server:
+  port: 10011
+
+spring:
+  application:
+    name: Eureka-Server # 服务名称唯一
+
+eureka:
+  client:
+    register-with-eureka: true # 是否注册自己 未集群
+    fetch-registry: true # 拉取服务列表 未集群
+    service-url:
+      defautZone: http://127.0.0.1:10010/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1

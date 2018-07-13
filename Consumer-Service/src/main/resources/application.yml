@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: Consumer-Service
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:10010/eureka
+  instance:
+      prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+      ip-address: 127.0.0.1   # 指定自己的ip信息，不指定的话会自己寻找
