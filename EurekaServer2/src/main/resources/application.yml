@@ -4,13 +4,26 @@ server:
 spring:
   application:
     name: Eureka-Server # 服务名称唯一
+#eureka:
+#  client:
+#    register-with-eureka: true # 是否注册自己 未集群
+#    fetch-registry: true # 拉取服务列表 未集群
+#    service-url:
+#      defautZone: http://127.0.0.1:10010/eureka
+#  instance:
+#    prefer-ip-address: true
+#    ip-address: 127.0.0.1
 
 eureka:
   client:
-    register-with-eureka: true # 是否注册自己 未集群
-    fetch-registry: true # 拉取服务列表 未集群
     service-url:
-      defautZone: http://127.0.0.1:10010/eureka
+      defaultZone: http://127.0.0.1:10010/eureka
   instance:
     prefer-ip-address: true
     ip-address: 127.0.0.1
+    # lease-renewal-interval-in-seconds: 10   # 服务续约(renew)的间隔，默认为30秒
+    # lease-expiration-duration-in-seconds: 5 # 服务失效时间，默认值90秒
+    # instance-id: ${spring.application.name}:${server.port} # 可不配置
+  server:
+    enable-self-preservation: false # 关闭自我保护模式（缺省为打开）
+    eviction-interval-timer-in-ms: 3000 # 扫描失效服务的间隔时间（缺省为60*1000ms）

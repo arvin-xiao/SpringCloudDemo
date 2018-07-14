@@ -18,7 +18,7 @@ public class ConsumerController {
     @Autowired
     private ConsumerService consumerService;
 
-    @GetMapping()
+    @GetMapping
     public List<User> queryUserByIds(@RequestParam("ids")List<Long> ids){
         List<User> userList = consumerService.queryUserById(ids);
         return userList;

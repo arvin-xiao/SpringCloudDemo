@@ -4,12 +4,61 @@ server:
 spring:
   application:
     name: Consumer-Service
+  cloud:
+    loadbalancer:
+      retry:
+        enabled: true # 消费者客户端开启重试机制 开启Spring Cloud的重试功能
+
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://127.0.0.1:10010/eureka
+      defaultZone: http://127.0.0.1:10010/eureka,http://127.0.0.1:10011/eureka
+    registry-fetch-interval-seconds: 5
   instance:
-      prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
-      ip-address: 127.0.0.1   # 指定自己的ip信息，不指定的话会自己寻找
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    ip-address: 127.0.0.1   # 指定自己的ip信息，不指定的话会自己寻找
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+    instance-id: ${spring.application.name}:${server.port}
+
+#user-service: # 仅当前服务
+#  ribbon:
+#    # NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule # 负载均衡从RoundRobinRule切换为随机模式
+#    ConnectTimeout: 250             # Ribbon的连接超时时间
+#    ReadTimeout: 1000               # Ribbon的数据读取超时时间
+#    OkToRetryOnAllOperations: true  # 是否对所有操作都进行重试
+#    MaxAutoRetriesNextServer: 1     # 切换实例的重试次数
+#    MaxAutoRetries: 1               # 对当前实例的重试次数
+
+ribbon: # 全局配置
+  ConnectTimeout: 250             # Ribbon的连接超时时间
+  ReadTimeout: 1000               # Ribbon的数据读取超时时间
+  OkToRetryOnAllOperations: true  # 是否对所有操作都进行重试
+  MaxAutoRetriesNextServer: 1     # 切换实例的重试次数
+  MaxAutoRetries: 1               # 对当前实例的重试次数
+
+logging:
+  level:
+    org.springframework: debug
+    cn.arvin: debug
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1500 # Hsytrix的超时时间，默认1000毫秒
+
+feign:
+  hystrix:
+    enabled: true # 开启Feign的熔断功能
+  compression:
+    request:
+      enabled: true # 开启请求压缩
+      mime-types: text/html,application/xml,application/json # 设置压缩的数据类型
+      min-request-size: 2048 # 设置触发压缩的大小下限
+    response:
+      enabled: true # 开启响应压缩
